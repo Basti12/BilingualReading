@@ -1,26 +1,39 @@
-const fs = require('fs');
 const PDFDocument = require('pdfkit');
+const fs = require('fs');
 
-function createPDF(text) {
+function createPDF(bilingualPages) {
     const doc = new PDFDocument();
+    doc.pipe(fs.createWriteStream('bilingual.pdf'));
 
-    // Define the output file path relative to the current working directory
-    const outputPath = './output.pdf';
+    bilingualPages.forEach((page, index) => {
+        // Check if it's not the first page, then add a new page
+        if (index > 0) {
+            doc.addPage();
+        }
 
-    // Pipe its output to a file in the current directory
-    doc.pipe(fs.createWriteStream(outputPath));
+        // Add original text
+        doc.fontSize(12).text('Original:', {
+            underline: true
+        }).moveDown(0.5);
+        doc.fontSize(10).text(page.original).moveDown(1);
 
-    // Add your text to the document
-    doc.text(text, {
-        // Any additional options like align, etc.
+        // Add a page break for the translation
+        doc.addPage();
+
+        // Add translated text
+        doc.fontSize(12).text('Translation:', {
+            underline: true
+        }).moveDown(0.5);
+        doc.fontSize(10).text(page.translation);
+
+        // If it's not the last page, add another new page as a separator
+        if (index < bilingualPages.length - 1) {
+            doc.addPage();
+        }
     });
 
     // Finalize the PDF and end the stream
     doc.end();
-
-    console.log(`PDF created at ${outputPath}`);
 }
 
-module.exports = {
-    createPDF
-};
+module.exports = { createPDF };

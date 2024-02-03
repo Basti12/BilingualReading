@@ -6,19 +6,24 @@ async function processPDF() {
     try {
         await PDFLesen('./example.pdf');
         const textProSeite = getTextProSeite();
-        console.log(textProSeite); // Ensure this logs the expected text
 
-        // Translate all pages and wait for all to complete
-        const translatedTexts = await Promise.all(textProSeite.map(pageText => {
-            // Assuming translateText now properly returns a promise
-            return translateText(pageText, "EN");
-        }));
+        // Assuming createPDF is adapted to handle an array of {original, translation} objects
+        let bilingualPages = [];
 
-        // After all translations are done, create a PDF with the translated text
-        createPDF(translatedTexts.join("\n")); // Example of combining texts, adjust as needed
+        for (let pageText of textProSeite) {
+            const translatedText = await translateText(pageText, "EN"); // Ensure this returns the translated text
+            bilingualPages.push({
+                original: pageText,
+                translation: translatedText
+            });
+        }
+
+        // Create a bilingual PDF with the structured content
+        createPDF(bilingualPages);
     } catch (error) {
         console.error('An error occurred:', error);
     }
 }
+
 
 processPDF();
