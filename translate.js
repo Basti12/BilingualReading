@@ -1,12 +1,12 @@
 // Dynamically import node-fetch
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
-const deepLAuthKey = 'b4d2b925-6252-cf6c-cf32-b73b5fb47972:fx'; // Replace 'YOUR_API_KEY' with your actual DeepL authorization key
+const deepLAuthKey = 'YOUR_API_KEY'; // Replace 'YOUR_API_KEY' with your actual DeepL authorization key
 
 // Modify translateText to return a promise that resolves with the translated text
 async function translateText(text, targetLang) {
     return new Promise(async (resolve, reject) => {
-        const url = 'https://api-free.deepl.com/v2/translate';
+        const url = 'https://api.deepl.com/v2/translate';
         const body = {
             text: [text],
             target_lang: targetLang
