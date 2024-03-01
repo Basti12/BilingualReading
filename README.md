@@ -1,5 +1,5 @@
 # BilingualReading
-Application to bilingualism PDFs and section them for side to side reading.
+Application to bilingualize PDFs and section them for left-right reading.
 
 How-To:
 1. clone repo
